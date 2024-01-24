@@ -2,25 +2,30 @@ import React from 'react'
 import { RxActivityLog } from "react-icons/rx";
 import Task from './Task';
 
+
 const App = () => {
   const [textAreaValue, setTextAreaValue] = React.useState('');
-  const [displayedTasks, setDisplayedTasks] = React.useState([]);
-  // const [messages, setMessages] = React.useState([]);
-
+  const [taskList, setTaskList] = React.useState([]);
   
-
+  
   const textAreaChangeHandler = (event) => {
    return setTextAreaValue(event.target.value)
   }
 
 
   const AddTaskHandler = () => {
-    
-      setDisplayedTasks([...displayedTasks, textAreaValue])
+
+      setTaskList([...taskList, textAreaValue])
       setTextAreaValue('');
     
   }
 
+  const removeTaskHandler = (index) => {
+    setTaskList((prevTasks) => prevTasks.filter((_, i) => i !== index));
+  };
+
+
+  console.log(taskList)
   
   
   return (
@@ -40,14 +45,17 @@ const App = () => {
             w-[20%] h-[43px]' onClick={AddTaskHandler} >Add</button>
           </div>
           
-          {displayedTasks.length === 0 ? (
+          {taskList.length === 0 ? (
             <div>There are no notes yet</div>
           ) : (
             <div className='mt-2 mb-2'>
               <ul>
-                <Task text={displayedTasks.map((displayedTask, index) => (
-                  <li key={index}>{displayedTask}</li>
-                ))} />
+                {
+                  taskList.map((task, key) => {
+                     return <Task text={task} index={key} onCancel={removeTaskHandler}/> 
+
+                  })
+                }
               </ul>       
             </div>
           )}
